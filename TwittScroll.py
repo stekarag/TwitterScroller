@@ -1,39 +1,48 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys 
 import time
+import getpass
 
 """
 A function that uses selenium and chromedriver to scroll through the tweets of a Twitter account.
 """
 
-def seeTweets(uname,pword):
+def seeTweets(uname,pword,speed):
  
     driver = webdriver.Chrome('chromedriver.exe')
-    driver.get("https://twitter.com/home") #open the browser and visit the url
-    time.sleep(2) #if the connection is slow alter this
+    driver.get("https://twitter.com/home")
+    time.sleep(2)
 
 
     driver.find_element_by_name("session[username_or_email]").send_keys(uname)
-    print('\nName succesfully entered')
     time.sleep(2)
  
     driver.find_element_by_name("session[password]").send_keys(pword)
-    print('Password succesfully entered')
     time.sleep(2)
 
     driver.find_element_by_xpath("//div[@class='css-1dbjc4n']/div[@role='button']").click()
-    print('Button pressed')
-
-    print('Getting homepage\n')
-    
+    time.sleep(2)
     #driver.maximize_window() 
 
     while(1):
-        driver.execute_script("window.scrollBy(0,30);") 
-        time.sleep(0.5)
+        #driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        no = str(0.01*speed)
+        cmd = "window.scrollBy(%s);"%no
+        driver.execute_script(cmd) 
+        time.sleep(0.01)
     print('done')
 
-print("\nWith twitter scroller you can watch your twitter feeds scroll down by themselves!\n")
+print("\nWith twitter scroller you can watch your twitter feeds scroll down by themselves!")
 u = input("Enter username or email: ")
-p = input("Enter password for (%s):"%u)
-seeTweets(u,p)
+p = getpass.getpass("Enter password for %s: "%u)
+j = 1
+while j:
+    try:
+        s = int(input("Enter speed (1, 2, 3 etc): "))
+        j = 0
+    except ValueError:
+        print("Please reenter an integer for speed.")
+
+seeTweets(u,p,s)
+
+#augment letter size twice
